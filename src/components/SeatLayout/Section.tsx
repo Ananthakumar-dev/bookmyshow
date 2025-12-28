@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {useFieldArray} from "react-hook-form";
 import {
     FormControl,
@@ -12,6 +12,7 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {ArrowRight, Plus, Trash} from "lucide-react";
 import {useSeatLayout} from "@/context/SeatLayoutContext";
+import ColumnForm from "@/components/SeatLayout/ColumnForm";
 
 const Section = () => {
     const {form, moveToNextStep, activeDivision} = useSeatLayout();
@@ -20,15 +21,11 @@ const Section = () => {
         name: 'sections'
     })
 
-    const sections = form.watch('sections')
-
     return (
         <>
             <div className="space-y-2 p-4">
                 {
                     sectionFields.map((sectionEl, index) => {
-
-
                         return (
                             <div key={sectionEl.id} className="space-y-2">
                                 <div className="pl-4">
@@ -110,7 +107,7 @@ const Section = () => {
                                                             number_of_columns_that_section_contains: 1,
                                                             columns: [
                                                                 {
-                                                                    max_seats_that_column_contains: 2
+                                                                    max_seats_that_column_contains: 1
                                                                 }
                                                             ]
                                                         })}
@@ -136,47 +133,16 @@ const Section = () => {
                                     </div>
 
 
-                                    <div className={activeDivision === 1 ? 'block' : 'hidden'}>
-                                        <h6>Columns Customization</h6>
+                                    <div className={activeDivision === 1 ? 'block pb-1 border-b' : 'hidden'}>
+                                        {index === 0 && (
+                                            <h5 className="text-xl mb-2 text-primary">Columns Customization</h5>)}
 
-                                        <p>Customize column for the section - {index + 1}</p>
-                                        <FormField
+                                        <p>Section - {index + 1}</p>
+                                        <ColumnForm
+                                            key={sectionEl.id}
                                             control={form.control}
-                                            name={`sections.${index}.number_of_columns_that_section_contains`}
-                                            render={({field}) => (
-                                                <FormItem className="min-w-[30%]">
-                                                    <FormLabel>Number of columns that section contains</FormLabel>
-                                                    <FormControl>
-                                                        <Input type="number" placeholder="Section name" {...field} />
-                                                    </FormControl>
-                                                    <FormMessage/>
-                                                </FormItem>
-                                            )}
+                                            index={index}
                                         />
-
-                                        {
-                                            new Array(number_of_columns_that_section_contains).fill(0).map((el, columnIndex) => {
-                                                return (
-                                                    <div key={sectionEl.id}>
-                                                        <FormField
-                                                            control={form.control}
-                                                            name={`sections.${index}.columns.${columnIndex}.max_seats_that_column_contains`}
-                                                            render={({field}) => (
-                                                                <FormItem className="min-w-[30%]">
-                                                                    <FormLabel>Maximum seats that column
-                                                                        contains</FormLabel>
-                                                                    <FormControl>
-                                                                        <Input type="number"
-                                                                               placeholder="Section name" {...field} />
-                                                                    </FormControl>
-                                                                    <FormMessage/>
-                                                                </FormItem>
-                                                            )}
-                                                        />
-                                                    </div>
-                                                )
-                                            })
-                                        }
                                     </div>
                                 </div>
                             </div>

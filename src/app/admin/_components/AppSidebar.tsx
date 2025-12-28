@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import {Calendar, ChevronUp, Home, Inbox, User, TvMinimalPlay} from "lucide-react"
+import {Calendar, ChevronUp, Home, Inbox, User, TvMinimalPlay, Theater, TheaterIcon} from "lucide-react"
 
 import {
     Sidebar,
@@ -31,6 +31,11 @@ const items = [
         title: "Theaters",
         url: "/admin/theaters",
         icon: Home,
+    },
+    {
+        title: "Seat Layout",
+        url: "/admin/seat-layout",
+        icon: TheaterIcon,
     },
     {
         title: "Screens",

@@ -19,41 +19,22 @@ const Page = async ({ searchParams }: PageProps) => {
   const pageSize = 10;
   const offset = (page - 1) * pageSize;
 
-  const data = await db
-    .select()
-    .from(theaters)
-    .orderBy(desc(theaters.createdAt))
-    .limit(pageSize)
-    .offset(offset);
-
-  const [{ count }] = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(theaters);
-
-  const totalPages = Math.ceil(count / pageSize);
-
-  const paginationProps = {
-    needPagination: true,
-    totalPages,
-    currentPage: page
-  }
-
   return (
     <div className="container p-4 space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2>Theaters</h2>
-          <p> Here you can manage all the theaters config </p>
+          <h2>Seat Layout</h2>
+          <p> Here you can manage all the seat layout config </p>
         </div>
 
         <div>
           <Button variant="link">
-            <Link href="/admin/theaters/add">Add</Link>
+            <Link href="/admin/seat-layout/add">Add</Link>
           </Button>
         </div>
       </div>
 
-      <DataTable columns={columns} data={data} paginationProps={paginationProps} />
+      {/* <DataTable columns={columns} data={data} paginationProps={paginationProps} /> */}
     </div>
   );
 };

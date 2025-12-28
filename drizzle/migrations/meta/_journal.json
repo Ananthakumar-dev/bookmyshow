@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1766197913744,
+      "tag": "0000_puzzling_iron_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1766503846149,
+      "tag": "0001_young_nebula",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1766579257653,
+      "tag": "0002_damp_mole_man",
+      "breakpoints": true
+    }
+  ]
+}

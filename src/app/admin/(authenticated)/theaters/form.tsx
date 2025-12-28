@@ -27,16 +27,50 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import theaterSchema, {theaterSchemaType} from "@/app/admin/(authenticated)/theaters/form-schema";
 import cities from "@/_lib/city";
 
+import { toast } from "sonner"
+
+import { useRouter } from 'next/navigation';
+
+type TheaterFormProps = {
+  defaultValues: theaterSchemaType;
+  mode: "add" | "edit";
+  theaterId?: string;
+};
+
 const TheatreForm = (
-    { defaultValues }: { defaultValues: theaterSchemaType }
+    { defaultValues, mode, theaterId }: TheaterFormProps
 ) => {
+    const router = useRouter();
+
     const form = useForm<theaterSchemaType>({
         resolver: zodResolver(theaterSchema),
         defaultValues
     });
 
-    const onSubmit = (values: theaterSchemaType) => {
-        console.log(values)
+    const onSubmit = async (values: theaterSchemaType) => {
+        const formData = new FormData();
+        Object.entries(values).forEach(([key, value]) => {
+            if (value !== null && value !== undefined) {
+                formData.append(key, value as any);
+            }
+        });
+
+        const url = mode === "edit" ? `/api/theaters/${theaterId}` : "/api/theaters";
+        const method = mode === "edit" ? "PATCH" : "POST";
+
+        try {
+            const res = await fetch(url, {
+                method,
+                body: formData,
+            });
+    
+            if(res.ok) {
+                toast("Theater has been created.")
+                router.push("/admin/theaters");
+            }
+        } catch(error) {
+            toast.error("Something went wrong!");
+        }
     }
 
     return (
@@ -137,6 +171,26 @@ const TheatreForm = (
                     )}
                 />
 
+                <FormField
+                    control={form.control}
+                    name="photo"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Photo</FormLabel>
+                            <FormControl>
+                                <Input 
+                                    type="file" 
+                                    onChange={(e) => field.onChange(e.target.files?.[0])}
+                                    onBlur={field.onBlur}
+                                    disabled={field.disabled}
+                                    name={field.name}
+                                    ref={field.ref}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
                 <Button type="submit" className="text-right">Submit</Button>
             </form>

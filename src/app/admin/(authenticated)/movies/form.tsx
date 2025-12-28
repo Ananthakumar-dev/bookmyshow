@@ -43,11 +43,20 @@ import language from "@/_lib/language";
 import certification from "@/_lib/certification";
 import movie_status from "@/_lib/movie_status"
 import cast_options from "@/_lib/cast_options";
+import Link from 'next/link';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+
+type MovieFormProps = {
+  defaultValues: movieSchemaType;
+  mode: "add" | "edit";
+  movieId?: string;
+};
 
 const MovieForm = (
-    { defaultValues }: { defaultValues: movieSchemaType }
+    { defaultValues, mode, movieId }: MovieFormProps
 ) => {
-
+    const router = useRouter();
     const form = useForm({
         resolver: zodResolver(movieSchema),
         defaultValues
@@ -58,8 +67,29 @@ const MovieForm = (
         name: "casts"
     })
 
-    const onSubmit = (values: movieSchemaType) => {
-        console.log(values)
+    const onSubmit = async (values: movieSchemaType) => {
+        const url = mode === "edit" ? `/api/movies/${movieId}` : "/api/movies";
+        const method = mode === "edit" ? "PATCH" : "POST";
+        const msg = mode === "edit" ? "Movie has been updated." : "Movie has been created.";
+
+        try {
+            const res = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            });
+    
+            if(res.ok) {
+                toast(msg)
+                router.push("/admin/movies");
+            } else {
+                toast.error("Something went wrong!");    
+            }
+        } catch(error) {
+            toast.error("Something went wrong!");
+        }
     }
 
     return (
@@ -98,7 +128,7 @@ const MovieForm = (
                     name="duration"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Duration</FormLabel>
+                            <FormLabel>Duration (In Minutes)</FormLabel>
                             <FormControl>
                                 <Input type="number" placeholder="Movie duration in minutes" {...field} />
                             </FormControl>
@@ -165,7 +195,7 @@ const MovieForm = (
 
                         return (
                             <FormItem>
-                                <FormLabel>Duration</FormLabel>
+                                <FormLabel>Genre</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <FormControl>
@@ -235,7 +265,7 @@ const MovieForm = (
                         <FormItem>
                             <FormLabel>Poster Url</FormLabel>
                             <FormControl>
-                                <Input type="url" placeholder="Movie duration in minutes" {...field} />
+                                <Input type="url" placeholder="Poster Url" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -249,7 +279,7 @@ const MovieForm = (
                         <FormItem>
                             <FormLabel>Trailer Url</FormLabel>
                             <FormControl>
-                                <Input type="url" placeholder="Movie duration in minutes" {...field} />
+                                <Input type="url" placeholder="Trailer Url" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -465,6 +495,13 @@ const MovieForm = (
                             );
                         })
                     }
+                </div>
+                
+                <div className="text-right">
+                    <Link href="/admin/movies">
+                        <Button type="button" variant="link">Cancel</Button>
+                    </Link>
+                    <Button type="submit">Submit</Button>
                 </div>
             </form>
         </Form>

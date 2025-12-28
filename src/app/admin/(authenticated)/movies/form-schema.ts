@@ -31,16 +31,16 @@ const movieSchema = z.object({
         message: "title required atleast 2 characters",
     }),
     description: z.string(),
-    duration: z.number().min(1),
-    release_date: z.date(),
+    duration: z.coerce.number().min(1),
+    release_date: z.coerce.date(),
     genre: z.string()
         .array(),
     language: z.string()
         .refine(val => languageValues.includes(val), {
             message: 'Invalid language selected'
         }),
-    poster_url: z.string(),
-    trailer_url: z.string(),
+    poster_url: z.string().url(),
+    trailer_url: z.string().url().optional(),
     certification: z.string()
         .refine(val => certificationValues.includes(val), {
             message: 'Invalid certification selected'

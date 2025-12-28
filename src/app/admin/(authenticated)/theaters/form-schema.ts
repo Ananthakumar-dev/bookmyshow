@@ -9,6 +9,7 @@ const theaterSchema = z.object({
     address: z.string(),
     phone: z.string().min(2),
     email: z.string(),
+    photo: z.instanceof(File).optional(),
     latitude: z.number().min(-90).max(90).nullable(),
     longitude: z.number().min(-180).max(180).nullable(),
 })
