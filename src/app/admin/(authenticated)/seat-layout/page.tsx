@@ -1,11 +1,11 @@
 import React from "react";
 import DataTable from "@/components/data-table";
-import { columns } from "@/app/admin/(authenticated)/theaters/columns";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { db } from "@/db";
-import { theaters } from "@/db/schema/theaters";
 import { desc, sql } from "drizzle-orm";
+import { seatLayoutTemplates } from "@/db/schema/seatLayoutTemplates";
+import { columns } from "./columns";
 
 type PageProps = {
   searchParams: {
@@ -19,6 +19,25 @@ const Page = async ({ searchParams }: PageProps) => {
   const pageSize = 10;
   const offset = (page - 1) * pageSize;
 
+  const data = await db
+    .select()
+    .from(seatLayoutTemplates)
+    .orderBy(desc(seatLayoutTemplates.createdAt))
+    .limit(pageSize)
+    .offset(offset);
+
+  const [{ count }] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(seatLayoutTemplates);
+  
+  const totalPages = Math.ceil(count / pageSize);
+
+  const paginationProps = {
+    needPagination: true,
+    totalPages,
+    currentPage: page
+  }
+  
   return (
     <div className="container p-4 space-y-4">
       <div className="flex items-center justify-between">
@@ -34,7 +53,7 @@ const Page = async ({ searchParams }: PageProps) => {
         </div>
       </div>
 
-      {/* <DataTable columns={columns} data={data} paginationProps={paginationProps} /> */}
+      <DataTable columns={columns} data={data} paginationProps={paginationProps} />
     </div>
   );
 };
