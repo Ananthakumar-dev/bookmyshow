@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import screenSchema, {screenSchemaType} from '@/app/admin/(authenticated)/screens/screen-form-schema'
+import screenSchema, {screenSchemaType} from '@/app/admin/(authenticated)/screens/form-schema'
 import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 

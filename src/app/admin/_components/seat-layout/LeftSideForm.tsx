@@ -28,11 +28,10 @@ export default function LeftSideForm({ form, templateId }: Props) {
   });
 
   const onSubmit = async (data: SeatLayoutForm) => {
-    console.log(data)
     let url = "/api/seat-layout-templates";
     if(templateId) url = `/api/seat-layout-templates/${templateId}`;
 
-    const method = templateId ? "PUT" : "POST";
+    const method = templateId ? "PATCH" : "POST";
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
@@ -47,7 +46,6 @@ export default function LeftSideForm({ form, templateId }: Props) {
     }
 
     const { id } = await res.json();
-    console.log("Saved layout id:", id);
     toast("Seat layout saved successfully!");
     router.push("/admin/seat-layout");
   };

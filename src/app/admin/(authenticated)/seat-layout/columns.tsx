@@ -36,23 +36,23 @@ export const columns: ColumnDef<SeatLayoutColumn>[] = [
       const router = useRouter();
 
       const handleDelete = async (id: string) => {
-      const confirmed = window.confirm(
-        "Are you sure you want to delete this seat layout template?"
-      );
+        const confirmed = window.confirm(
+          "Are you sure you want to delete this seat layout template?"
+        );
 
-      if (!confirmed) return;
+        if (!confirmed) return;
 
-      const res = await fetch(`/api/seat-layout/${id}`, {
-        method: "DELETE",
-      });
+        const res = await fetch(`/api/seat-layout-templates/${id}`, {
+          method: "DELETE",
+        });
 
-      if (!res.ok) {
-        alert("Failed to delete seat layout template");
-        return;
-      }
+        if (!res.ok) {
+          alert("Failed to delete seat layout template");
+          return;
+        }
 
-      router.refresh(); // re-fetch server data
-    };
+        router.refresh(); // re-fetch server data
+      };
 
       return (
         <div className="flex gap-2">
